@@ -23,11 +23,14 @@ Method = Literal["semantic", "bm25", "hybrid"]
 
 
 def normalize_metadata(metadata: dict[str, Any]) -> dict[str, Any]:
-    """Map old index keys to the current metadata names."""
     normalized = dict(metadata)
-    normalized["source_file"] = normalized.get("source_file", normalized.get("source", "unknown"))
+    normalized["source_file"] = normalized.get(
+        "source_file", normalized.get("source", "unknown")
+    )
     normalized["page_number"] = normalized.get("page_number", normalized.get("page"))
-    normalized["section_title"] = normalized.get("section_title", normalized.get("heading", "unknown"))
+    normalized["section_title"] = normalized.get(
+        "section_title", normalized.get("heading", "unknown")
+    )
     return normalized
 
 
@@ -42,11 +45,11 @@ class RetrievedChunk:
 
 
 class Retriever:
-    """Search the same chunks by meaning, keywords, or a hybrid of both."""
-
     def __init__(self) -> None:
         self.model = SentenceTransformer(EMBEDDING_MODEL)
-        self.collection = chromadb.PersistentClient(path=str(CHROMA_DIR)).get_collection(COLLECTION_NAME)
+        self.collection = chromadb.PersistentClient(
+            path=str(CHROMA_DIR)
+        ).get_collection(COLLECTION_NAME)
         with BM25_INDEX_PATH.open("rb") as file:
             index = pickle.load(file)
         self.bm25, self.texts = index["bm25"], index["texts"]
@@ -54,12 +57,18 @@ class Retriever:
         self.metadata = [normalize_metadata(item) for item in raw_metadata]
 
     def semantic(self, query: str, group: str | None = None) -> list[RetrievedChunk]:
-        """Find chunks with embeddings closest in meaning to the query."""
         result = self.collection.query(
             query_embeddings=[self.model.encode(query).tolist()],
             n_results=TOP_K_SEMANTIC,
             where={"group": group} if group else None,
         )
+
+        documents = result.get("documents")
+        metadatas = result.get("metadatas")
+        distances = result.get("distances")
+        if not documents or not metadatas or not distances:
+            return []
+
         return [
             RetrievedChunk(
                 text=text,
@@ -69,14 +78,13 @@ class Retriever:
                 reason="High embedding similarity to the query",
             )
             for text, metadata, distance in zip(
-                result["documents"][0],
-                result["metadatas"][0],
-                result["distances"][0],
+                documents[0],
+                metadatas[0],
+                distances[0],
             )
         ]
 
     def lexical(self, query: str, group: str | None = None) -> list[RetrievedChunk]:
-        """Find chunks sharing important exact terms with the query using BM25."""
         scores = self.bm25.get_scores(tokenize(query))
         ranked = sorted(range(len(scores)), key=scores.__getitem__, reverse=True)
         results = []
@@ -106,7 +114,6 @@ class Retriever:
         )
 
     def hybrid(self, query: str, group: str | None = None) -> list[RetrievedChunk]:
-        """Fuse semantic and BM25 rankings with Reciprocal Rank Fusion (RRF)."""
         fused: dict[tuple, RetrievedChunk] = {}
 
         # RRF uses rank positions instead of mixing incompatible raw score scales.
@@ -136,6 +143,10 @@ class Retriever:
         group: str | None = None,
         top_k: int = FINAL_TOP_K,
     ) -> list[RetrievedChunk]:
-        searches = {"semantic": self.semantic, "bm25": self.lexical, "hybrid": self.hybrid}
+        searches = {
+            "semantic": self.semantic,
+            "bm25": self.lexical,
+            "hybrid": self.hybrid,
+        }
         candidates = searches[method](query, group)
         return rerank(query, candidates, top_k, enabled=RERANK_ENABLED)

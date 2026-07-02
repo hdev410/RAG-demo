@@ -12,7 +12,6 @@ from rag.shared.text import tokenize
 
 
 def main() -> None:
-    """Run the offline RAG pipeline and persist both search indexes."""
     if not DATA_DIR.exists():
         raise FileNotFoundError(f"Document folder not found: {DATA_DIR}")
 

@@ -5,7 +5,6 @@ from rag.retrieval.hybrid import Method, Retriever
 
 
 def print_results(query: str, method: Method = "hybrid", top_k: int = FINAL_TOP_K) -> None:
-    """Print ranking details to explain why each chunk was retrieved."""
     chunks = Retriever().retrieve(query, method=method, top_k=top_k)
     print(f"\nQuery: {query}\nMethod: {method}\nResults: {len(chunks)}")
 

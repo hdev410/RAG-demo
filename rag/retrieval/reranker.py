@@ -12,7 +12,6 @@ def rerank(
     top_k: int,
     enabled: bool = False,
 ) -> list["RetrievedChunk"]:
-    """Optionally reorder candidates with a cross-encoder; otherwise do nothing."""
     if not enabled or not chunks:
         return chunks[:top_k]
 

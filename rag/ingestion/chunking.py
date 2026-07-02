@@ -5,7 +5,6 @@ from rag.shared.text import clean, is_heading, is_low_value, split_with_overlap
 
 
 def _document_sections(pages: list[dict]) -> list[tuple[str, int, str]]:
-    """Group consecutive lines under the nearest detected section heading."""
     sections = []
     heading, start_page, lines = "General", pages[0]["page_number"], []
 
@@ -28,7 +27,6 @@ def _document_sections(pages: list[dict]) -> list[tuple[str, int, str]]:
 
 
 def chunk_pages(pages: list[dict]) -> list[dict]:
-    """Split sections into overlapping chunks to preserve nearby context."""
     documents = defaultdict(list)
     for page in pages:
         documents[(page["group"], page["source_file"])].append(page)
@@ -38,6 +36,7 @@ def chunk_pages(pages: list[dict]) -> list[dict]:
         if group == "unknown":
             continue
         for heading, page, section in _document_sections(document_pages):
+            # A heading can contain the feature name even when the body does not.
             for index, text in enumerate(split_with_overlap(section, CHUNK_SIZE, CHUNK_OVERLAP)):
                 chunks.append(
                     {

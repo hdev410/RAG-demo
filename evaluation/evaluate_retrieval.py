@@ -18,8 +18,15 @@ class Metrics:
 
 
 def normalize(value: str) -> set[str]:
-    """Normalize filenames so small formatting differences do not break labels."""
-    ignored = {"functional", "specification", "interface", "final", "signed", "completed", "pdf"}
+    ignored = {
+        "functional",
+        "specification",
+        "interface",
+        "final",
+        "signed",
+        "completed",
+        "pdf",
+    }
     words = value.lower().replace("_", " ").replace("-", " ").split()
     return {word.strip("().") for word in words if len(word.strip("().")) > 2} - ignored
 
@@ -29,17 +36,22 @@ def source_matches(actual: str, expected: str) -> bool:
 
 
 def matched_page(chunk: RetrievedChunk, sample: dict) -> int | None:
-    """Return the expected page label matched by a retrieved chunk."""
-    if not source_matches(str(chunk.metadata.get("source_file", "")), sample["expected_source_contains"]):
+    if not source_matches(
+        str(chunk.metadata.get("source_file", "")), sample["expected_source_contains"]
+    ):
         return None
 
     expected_pages = sample.get("expected_pages", [])
     if not expected_pages:
-        return 0  # A source-only label is represented by one synthetic item.
+        return 0
+
+    page_value = chunk.metadata.get("page_number")
+    if not isinstance(page_value, (int, str)):
+        return None
 
     try:
-        actual_page = int(chunk.metadata.get("page_number"))
-    except (TypeError, ValueError):
+        actual_page = int(page_value)
+    except ValueError:
         return None
     return next(
         (page for page in expected_pages if abs(actual_page - page) <= PAGE_TOLERANCE),
@@ -48,13 +60,17 @@ def matched_page(chunk: RetrievedChunk, sample: dict) -> int | None:
 
 
 def score_question(chunks: list[RetrievedChunk], sample: dict, top_k: int) -> Metrics:
-    """Calculate chunk precision, label recall, F1, and first-relevant MRR."""
     matches = [matched_page(chunk, sample) for chunk in chunks]
-    relevant_ranks = [rank for rank, match in enumerate(matches, start=1) if match is not None]
+    relevant_ranks = [
+        rank for rank, match in enumerate(matches, start=1) if match is not None
+    ]
     expected_count = max(1, len(sample.get("expected_pages", [])))
 
+    # Precision counts relevant chunks; recall counts distinct labeled pages found.
     precision = len(relevant_ranks) / top_k
-    recall = min(1.0, len({match for match in matches if match is not None}) / expected_count)
+    recall = min(
+        1.0, len({match for match in matches if match is not None}) / expected_count
+    )
     f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.0
     reciprocal_rank = 1 / relevant_ranks[0] if relevant_ranks else 0.0
     return Metrics(precision, recall, f1, reciprocal_rank)
@@ -63,7 +79,9 @@ def score_question(chunks: list[RetrievedChunk], sample: dict, top_k: int) -> Me
 def evaluate(retriever: Retriever, samples: list[dict], method: Method) -> dict:
     rows = []
     for sample in samples:
-        chunks = retriever.retrieve(sample["question"], method=method, top_k=FINAL_TOP_K)
+        chunks = retriever.retrieve(
+            sample["question"], method=method, top_k=FINAL_TOP_K
+        )
         metrics = score_question(chunks, sample, FINAL_TOP_K)
         rows.append(
             {
@@ -72,7 +90,9 @@ def evaluate(retriever: Retriever, samples: list[dict], method: Method) -> dict:
                 "recall": metrics.recall,
                 "f1": metrics.f1,
                 "reciprocal_rank": metrics.reciprocal_rank,
-                "retrieved_sources": [chunk.metadata.get("source_file") for chunk in chunks],
+                "retrieved_sources": [
+                    chunk.metadata.get("source_file") for chunk in chunks
+                ],
             }
         )
 
@@ -103,10 +123,15 @@ def print_summary(reports: list[dict]) -> None:
 def main() -> None:
     samples = json.loads(EVAL_FILE.read_text(encoding="utf-8"))
     retriever = Retriever()
-    reports = [evaluate(retriever, samples, method) for method in ("semantic", "bm25", "hybrid")]
+    reports = [
+        evaluate(retriever, samples, method)
+        for method in ("semantic", "bm25", "hybrid")
+    ]
     print_summary(reports)
     REPORT_FILE.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_FILE.write_text(json.dumps(reports, indent=2, ensure_ascii=False), encoding="utf-8")
+    REPORT_FILE.write_text(
+        json.dumps(reports, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     print(f"Detailed report: {REPORT_FILE}")
 
 
