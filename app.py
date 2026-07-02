@@ -15,7 +15,11 @@ def main() -> None:
         print(f"\n{generate(question, chunks)}")
         print("\nSources:")
         for chunk in chunks:
-            print(f"- {chunk.metadata.get('source')} | page {chunk.metadata.get('page')} | score {chunk.score:.4f}")
+            print(
+                f"- {chunk.metadata.get('source_file')} | "
+                f"page {chunk.metadata.get('page_number')} | "
+                f"score {chunk.score:.4f}"
+            )
 
 
 if __name__ == "__main__":

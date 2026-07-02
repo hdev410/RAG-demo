@@ -48,7 +48,7 @@ def get_chunk_stats() -> dict:
     chunk_chars = defaultdict(int)
 
     for doc, metadata in zip(documents, metadatas):
-        source = metadata.get("source", "unknown")
+        source = metadata.get("source_file", metadata.get("source", "unknown"))
         chunk_count[source] += 1
         chunk_chars[source] += len(str(doc))
 

@@ -1,44 +1,31 @@
-# RAG Demo
+# RAG Demo Structure
 
-This project demonstrates a small, complete Retrieval-Augmented Generation pipeline: PDF ingestion, heading-aware chunking, semantic/BM25 retrieval, rank fusion, evaluation, and Gemini answer generation.
-
-## Structure
+This folder contains a small PDF RAG pipeline with offline indexing, hybrid retrieval, optional reranking, evaluation, and Gemini answer generation.
 
 ```text
 rag_project/
-├── app.py                         # Interactive RAG CLI
-├── rag/
-│   ├── config.py                  # Paths and shared settings
-│   ├── ingestion/
-│   │   ├── loader.py              # Extract PDF pages
-│   │   ├── chunking.py            # Build heading-aware chunks
-│   │   └── build_index.py         # Create Chroma and BM25 indexes
-│   ├── retrieval/
-│   │   └── hybrid.py              # Semantic, BM25, and RRF retrieval
-│   ├── generation/
-│   │   └── answer.py              # Build context and call Gemini
-│   └── shared/
-│       └── text.py                # Text cleaning and tokenization
-├── evaluation/
-│   ├── retrieval.py               # Compare retrieval methods
-│   ├── ingestion.py               # Audit PDF/chunk coverage
-│   └── inspect_index.py            # Preview indexed chunks
-├── data/
-│   ├── source_documents/          # PDF input (not committed)
-│   └── ground_truth/questions.json
-└── artifacts/
-    ├── indexes/                    # Generated Chroma/BM25 data
-    └── reports/                    # Generated evaluation reports
+|-- app.py                              Interactive query CLI
+|-- rag/
+|   |-- config.py                       Paths and tunable parameters
+|   |-- ingestion/
+|   |   |-- loader.py                   Extract PDF pages
+|   |   |-- chunking.py                 Create heading-aware chunks
+|   |   `-- build_index.py              Build ChromaDB and BM25 indexes
+|   |-- retrieval/
+|   |   |-- hybrid.py                   Semantic, BM25, and RRF retrieval
+|   |   |-- reranker.py                 Optional second-stage reranking
+|   |   `-- debug.py                    Inspect retrieved chunks
+|   |-- generation/answer.py            Build prompt and call Gemini
+|   `-- shared/text.py                  Text cleaning and tokenization
+|-- evaluation/
+|   |-- eval_questions.json             Retrieval ground truth
+|   |-- evaluate_retrieval.py           Precision, recall, F1, and MRR
+|   |-- ingestion.py                    Audit document/chunk coverage
+|   `-- inspect_index.py                Preview indexed chunks
+|-- data/source_documents/              Input PDFs (not committed)
+`-- artifacts/
+    |-- indexes/                         Generated vector/BM25 indexes
+    `-- reports/                         Generated evaluation reports
 ```
 
-## Commands
-
-```powershell
-python -m rag.ingestion.build_index
-python app.py
-python -m evaluation.retrieval
-python -m evaluation.ingestion
-python -m evaluation.inspect_index
-```
-
-Retrieval modes are `semantic` (meaning), `bm25` (exact terms), and `hybrid` (RRF combines both rankings).
+See `README.md` for setup, commands, retrieval concepts, and tuning guidance.

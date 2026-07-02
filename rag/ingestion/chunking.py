@@ -5,8 +5,9 @@ from rag.shared.text import clean, is_heading, is_low_value, split_with_overlap
 
 
 def _document_sections(pages: list[dict]) -> list[tuple[str, int, str]]:
+    """Group consecutive lines under the nearest detected section heading."""
     sections = []
-    heading, start_page, lines = "General", pages[0]["page"], []
+    heading, start_page, lines = "General", pages[0]["page_number"], []
 
     def flush() -> None:
         nonlocal lines
@@ -19,7 +20,7 @@ def _document_sections(pages: list[dict]) -> list[tuple[str, int, str]]:
         for line in page["text"].splitlines():
             if is_heading(line):
                 flush()
-                heading, start_page = line.strip(), page["page"]
+                heading, start_page = line.strip(), page["page_number"]
             else:
                 lines.append(line)
     flush()
@@ -27,10 +28,10 @@ def _document_sections(pages: list[dict]) -> list[tuple[str, int, str]]:
 
 
 def chunk_pages(pages: list[dict]) -> list[dict]:
-    """Create heading-aware chunks while keeping source metadata."""
+    """Split sections into overlapping chunks to preserve nearby context."""
     documents = defaultdict(list)
     for page in pages:
-        documents[(page["group"], page["source"])].append(page)
+        documents[(page["group"], page["source_file"])].append(page)
 
     chunks = []
     for (group, source), document_pages in documents.items():
@@ -43,9 +44,9 @@ def chunk_pages(pages: list[dict]) -> list[dict]:
                         "text": f"Heading: {heading}\n\n{text}",
                         "metadata": {
                             "group": group,
-                            "source": source,
-                            "page": page,
-                            "heading": heading,
+                            "source_file": source,
+                            "page_number": page,
+                            "section_title": heading,
                             "chunk_index": index,
                         },
                     }
