@@ -1,0 +1,458 @@
+[
+  {
+    "question": "What is the purpose of the sTMS interface with NP Websites?",
+    "expected_source_contains": "NP Websites",
+    "expected_pages": [2],
+    "ground_truth": "The interface provides the agreed baseline of communication requirements and technical specifications between sTMS and Ngee Ann Polytechnic (NP) Websites so that NP websites can emulate the active CET course offerings shown on the sTMS Course Catalogue, ensuring no discrepancy between both systems.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What HTTP methods are used by the Get Course Info and Query Course Info interfaces in the NP Websites integration?",
+    "expected_source_contains": "NP Websites",
+    "expected_pages": [4, 5],
+    "ground_truth": "Get Course Info uses the HTTP GET method with launch parameters in the URL, while Query Course Info uses the HTTP POST method with query criteria in the request body. Both return Course Result data from sTMS.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What encryption method is used for the Get Course Condition interface with NP Websites?",
+    "expected_source_contains": "NP Websites",
+    "expected_pages": [6],
+    "ground_truth": "The Get Course Condition interface uses HTTPS as the encryption method, with HTTP API as the mode of interface, GET method, application/json content type, and real-time frequency.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How is API authentication handled for the NP Websites course info interfaces, and what is the default filter applied?",
+    "expected_source_contains": "NP Websites",
+    "expected_pages": [5],
+    "ground_truth": "API authentication is set to Open to all to allow frontend code to consume the API, with no credentials required. The default filter applied is Institution = NP and Course catalogue status = published, and the interface only returns active NP courses.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What systems does the sTMS Common Interface Functional Specification cover?",
+    "expected_source_contains": "sTMS Common Interface",
+    "expected_pages": [6],
+    "ground_truth": "The document covers Corppass, MyInfo, Unified Account Management (UAM), IHL Azure AD (AAD) integration, the shared LMS POLITEMall, OpenCerts (blockchain digital certificates), SSG's Training Partners Gateway (TPG), Workday HR system, and Workday Financial system.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What protocol does sTMS use to integrate with Corppass for company user login, and why was it introduced?",
+    "expected_source_contains": "sTMS Common Interface",
+    "expected_pages": [7],
+    "ground_truth": "sTMS uses the OIDC (OpenID Connect) protocol to integrate with Corppass and Singpass. OIDC was introduced to strengthen security and streamline communications when managing identity authorization across multiple applications and clouds, allowing sTMS to validate company users against the Singpass identity provider.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What authentication methods does the Unified Account Management (UAM) system support for students?",
+    "expected_source_contains": "sTMS Common Interface",
+    "expected_pages": [11],
+    "ground_truth": "UAM supports three authentication methods: Singpass, Student ID with password, and email OTP. Singpass is the default authentication method.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the default token expiration time issued by UAM after authentication, and is it configurable?",
+    "expected_source_contains": "sTMS Common Interface",
+    "expected_pages": [11],
+    "ground_truth": "The default expiration time for the authentication token issued by UAM is 2 hours, and this is configurable. The token is encrypted using an algorithm aligned between sTMS and UAM.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Does the IHL AAD integration retrieve staff profile information from Azure AD?",
+    "expected_source_contains": "sTMS Common Interface",
+    "expected_pages": [15, 16],
+    "ground_truth": "No. The AAD integration is used only for authentication and does not retrieve staff information from AAD; all IHL staff profiles are instead synchronised from the Workday HR system. Additionally, MFA must be enabled on the IHL Azure AD for additional authentication security.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "How does sTMS send claimable versus non-claimable training hour information to Workday HR System?",
+    "expected_source_contains": "sTMS Common Interface",
+    "expected_pages": [32, 33],
+    "ground_truth": "sTMS sends an EIB report for claimable training hours to Workday HR System via API, per the user-configured interval. For non-claimable training hours, sTMS pushes a timesheet report in CSV format into SFTP, which Workday HR System then pulls.",
+    "category": "interface",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What business rule governs when sTMS submits course runs to SSG TPG?",
+    "expected_source_contains": "sTMS Common Interface",
+    "expected_pages": [27],
+    "ground_truth": "sTMS submits the course run to SSG TPG when the intake status becomes 'Ready for Application'.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What file format and extension does the OpenCerts digital certificate use, and what mechanism guarantees its authenticity?",
+    "expected_source_contains": "sTMS Common Interface",
+    "expected_pages": [28],
+    "ground_truth": "OpenCerts uses a JSON format file with the '.OPENCERTS' extension, following the pre-defined OpenCerts 1.5 or 2.0 schema. Authenticity of each issued certificate is guaranteed by OpenCerts' anti-tampering mechanism.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What encryption protocol does sTMS use to transfer CET data files to the Temasek Polytechnic (TP) CET Data Repository?",
+    "expected_source_contains": "TP_CET_Data_Repository",
+    "expected_pages": [6],
+    "ground_truth": "sTMS encrypts the Database File, CSV files, student photos, and supporting documents using the PGP protocol before depositing them on the SFTP server for the TP CET Data Repository.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the folder retention policy for files deposited in the sTMS SFTP server for the TP CET Data Repository interface?",
+    "expected_source_contains": "TP_CET_Data_Repository",
+    "expected_pages": [9],
+    "ground_truth": "Folders under /{ENV}/TP/OUT/REPOSITORY are retained for a maximum of 30 days in the sTMS SFTP server, after which they are automatically deleted. TP can also delete the folders itself after pulling out the files.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the delta data sync trigger point for the TP CET Data Repository CSV file generation?",
+    "expected_source_contains": "TP_CET_Data_Repository",
+    "expected_pages": [10],
+    "ground_truth": "Delta data sync operates at the record level: if any field in a record changes (for example, the area of interest field in the course table), the system sends all data fields of that entire record to the TP CET Data Repository.",
+    "category": "interface",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the purpose of the ITE Alumni interface between STEP and ITE CRM?",
+    "expected_source_contains": "ITE_Alumni",
+    "expected_pages": [2],
+    "ground_truth": "The ITE Alumni interface is a 2-way integration between STEP and the ITE CRM System that allows ITE alumni to enjoy alumni discounts when applying for specific courses in STEP, by checking the applicant's alumni status in the ITE CRM system in real time.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What API method and content type are used for the Check Alumni Status interface with ITE CRM?",
+    "expected_source_contains": "ITE_Alumni",
+    "expected_pages": [3],
+    "ground_truth": "The Check Alumni Status interface uses the HTTP POST method with application/json content type, real-time frequency, and HTTPS encryption.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What encryption method does sTMS use for the NP Library System interface, and what file format does it generate?",
+    "expected_source_contains": "NP Library System",
+    "expected_pages": [7],
+    "ground_truth": "STEP generates XML files (zipped, e.g., SIS_STD_All_ddmmyyyy.zip) for the NP Library System interface and encrypts them using the PGP protocol before depositing them via SFTP.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What two roles are involved in the system flow for the NP Library System interface besides STEP?",
+    "expected_source_contains": "NP Library System",
+    "expected_pages": [6],
+    "ground_truth": "The two other roles are the Ex Libris SFTP Server (Ngee Ann Polytechnic's library system vendor SFTP server) and the STEP SFTP Server (an Azure-hosted SFTP server that stores encrypted files for data exchange).",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What encryption method does the ITE Service Indicator interface use, and how does it differ from PGP used elsewhere?",
+    "expected_source_contains": "ITE Service Indicator",
+    "expected_pages": [7],
+    "ground_truth": "The ITE Service Indicator interface uses PGP encryption implemented with GnuPG, listed in the interface design summary as 'PGP with GnuPG'.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What three roles are involved in the system flow of the Temasek Polytechnic VDI interface with sTMS?",
+    "expected_source_contains": "TP VDI",
+    "expected_pages": [6],
+    "ground_truth": "The three roles are the TP VDI System (Temasek Polytechnic's virtual lab environment), the sTMS SFTP Server (an Azure-hosted SFTP server storing CSV files for data exchange), and sTMS (shared Training Management System).",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What data does TP VDI System send to sTMS, and what does sTMS send back?",
+    "expected_source_contains": "TP VDI",
+    "expected_pages": [7, 8],
+    "ground_truth": "TP VDI System sends a subject list file (VDI_SUBJECT) to sTMS via SFTP encrypted with PGP. In return, sTMS generates and sends student list, lecturer list, and subject detail list files (VDI_STUDENT, VDI_LECTURER, VDI_SUBJECT_DETAIL) back to TP VDI System, also encrypted with PGP.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the purpose of the sTMS interface with the Singapore Polytechnic SG Secure System?",
+    "expected_source_contains": "SP SG Secure",
+    "expected_pages": [2],
+    "ground_truth": "The interface transfers students' access card details from sTMS to the Singapore Polytechnic SG Secure System for turnstile access, by generating a PGP-encrypted TXT file based on student enrollment status and depositing it on the SFTP server.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What delimiter is used in the SG Secure TXT file, and how frequently is it generated?",
+    "expected_source_contains": "SP SG Secure",
+    "expected_pages": [4],
+    "ground_truth": "The SG Secure TXT file uses '|' as a delimiter and is generated daily, at 1 AM, using a full load data sync mode.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the purpose of the sTMS interface with the Singapore Polytechnic iCRM System?",
+    "expected_source_contains": "SP iCRM",
+    "expected_pages": [2],
+    "ground_truth": "sTMS transfers CET current term students, MOE students, graduates, course, and race information to the SP iCRM System for Singapore Polytechnic's marketing purposes, via PGP-encrypted TXT files deposited on SFTP.",
+    "category": "interface",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the syncing frequency and scope for the Graduate table in the SP iCRM interface?",
+    "expected_source_contains": "SP iCRM",
+    "expected_pages": [5],
+    "ground_truth": "The Graduate table is synced as full-load data, containing SP MOE course graduated students' data for the last 3 terms, including the current term.",
+    "category": "interface",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the maximum number of tables that sTMS supports syncing to NYP Common App via SFTP, according to the documentation acceptance scope?",
+    "expected_source_contains": "NYP_Common_App",
+    "expected_pages": [3],
+    "ground_truth": "sTMS shall support full/delta sync of a maximum of 35 tables of data to NYP Common App via SFTP, as agreed in the version 1.0 documentation acceptance scope.",
+    "category": "interface",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What roles are involved in the system flow for the NYP Common App interface, and what protocol secures the files?",
+    "expected_source_contains": "NYP_Common_App",
+    "expected_pages": [4],
+    "ground_truth": "Three roles are involved: NYP Common App, the sTMS SFTP Server (Azure-hosted), and sTMS. Files exchanged between them are encrypted using the PGP protocol.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the purpose of the sTMS interface with the Ngee Ann Polytechnic NPAL Timetable system?",
+    "expected_source_contains": "NP Timetable",
+    "expected_pages": [4],
+    "ground_truth": "The interface transfers sTMS timetable data (such as course catalog, course offer, and class timetabling) as outbound CSV files to NP's NPAL system, and receives class session facility data inbound from NPAL to update facility information in sTMS course intake timetables.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "In the NP Timetable interface, who initiates the inbound FACILITY file transfer, and what does sTMS do with it?",
+    "expected_source_contains": "NP Timetable",
+    "expected_pages": [6, 7],
+    "ground_truth": "NP generates the FACILITY CSV file (list of running and upcoming CET classes with facility IDs) and deposits it, PGP-encrypted, to the sTMS SFTP server. sTMS then pulls and decrypts the file, compares it against existing data, and updates any differing session facility IDs in sTMS.",
+    "category": "interface",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the field name 'CourseCode' used for in the NP Websites Get Course Info interface, and what is its default value?",
+    "expected_source_contains": "NP Websites",
+    "expected_pages": [6],
+    "ground_truth": "CourseCode is the code of the course used as a launch parameter/query criteria, of String data type. Its default is blank, which means 'All' courses are returned.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What two integration methods does sTMS use to interface with Workday HR System for staff profile and training hour data respectively?",
+    "expected_source_contains": "sTMS Common Interface",
+    "expected_pages": [30, 31],
+    "ground_truth": "sTMS retrieves all staff information from Workday HR System via API (daily at 12:30am). For training hours, sTMS sends data to Workday HR via SFTP, including an EIB report (claimable hours, via API per configured interval) and CSV timesheet reports (non-claimable hours, pulled by Workday from sTMS SFTP).",
+    "category": "interface",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What does the Module Equivalence feature describe in the context of stackable courses, and where is the mapping case '1' shown for module enrollment?",
+    "expected_source_contains": "STEP Stackable Course",
+    "expected_pages": [9, 10],
+    "ground_truth": "Module Equivalence defines how a stackable course's modules map to equivalent modules across different course versions or from modular to stackable courses. For example, in Case 1, if a student has enrolled in Module 1, the system loads Module 1 directly as the equivalence result.",
+    "category": "interface",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Is Student ID mandatory in the STEP applicant details form (Step 1)?",
+    "expected_source_contains": "Stage_2_FS",
+    "expected_pages": [96],
+    "ground_truth": "Student ID is not a field listed in the Step 1 Applicant Details form; however, 'Name (according to NRIC/FIN)', 'Date of birth', and 'Citizenship type' are all mandatory fields in this step.",
+    "category": "step",
+    "difficulty": "hard"
+  },
+  {
+    "question": "Is the 'Name (according to NRIC/FIN)' field editable in the application's Step 1 - Applicant Details form?",
+    "expected_source_contains": "Stage_2_FS",
+    "expected_pages": [96],
+    "ground_truth": "No, the 'Name (according to NRIC/FIN)' field is not editable. It uses a single line of text control type, is mandatory, and is displayed on the listing page, but cannot be edited by the applicant during application.",
+    "category": "step",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the control type and mandatory rule for the 'NRIC no.' field in the application form?",
+    "expected_source_contains": "Stage_2_FS",
+    "expected_pages": [96],
+    "ground_truth": "The 'NRIC no.' field uses a single line of text control type and is mandatory only if the 'Citizenship type' selected is 'Singapore citizen' or 'Singapore PR'. It is not editable and is displayed on the listing page only when those citizenship types apply.",
+    "category": "step",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the validation rule and value list for the 'Race' field in the application form?",
+    "expected_source_contains": "Stage_2_FS",
+    "expected_pages": [98],
+    "ground_truth": "The 'Race' field is a mandatory single-choice dropdown list with a value list of Chinese, Indian, Malay, and Others, and it is displayed on the listing page.",
+    "category": "step",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Under what condition does the 'Postal code' field become mandatory in the applicant details form?",
+    "expected_source_contains": "Stage_2_FS",
+    "expected_pages": [98, 99],
+    "ground_truth": "The 'Postal code' field is mandatory only if the 'Residential address' field is set to 'Singapore' (except when 'Building name' and 'Floor number' are used instead).",
+    "category": "step",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the control type for the 'Gender' field, and what are its value list options?",
+    "expected_source_contains": "Stage_2_FS",
+    "expected_pages": [98],
+    "ground_truth": "The 'Gender' field uses a Radio button control type, allows a single selection, is mandatory, and has the value list Male and Female. It is displayed on the listing page.",
+    "category": "step",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What are the mandatory fields when creating a Citizenship Type record in master data setup?",
+    "expected_source_contains": "sTMS_FS_(Stage_1)_AP",
+    "expected_pages": [34],
+    "ground_truth": "Both 'Citizenship type name' and 'Code' are mandatory single-line-of-text fields; 'Code' must be a 5-character alphanumeric code or short form of the citizenship type. The 'Remarks' field (multiple line of text) is optional.",
+    "category": "step",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Can the Code field be edited after a Citizenship Type record is created?",
+    "expected_source_contains": "sTMS_FS_(Stage_1)_AP",
+    "expected_pages": [34],
+    "ground_truth": "Yes, the 'Code' field is editable, along with 'Citizenship type name' and 'Remarks', according to the Create/Edit Citizenship Type form field table.",
+    "category": "step",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What happens to course types associated with a Course Category when that category is deactivated?",
+    "expected_source_contains": "sTMS_FS_(Stage_1)_AP",
+    "expected_pages": [38],
+    "ground_truth": "Course types that are only associated with the deactivated course category will also be deactivated. Course types associated with multiple categories (including the deactivated one) will be de-linked from that category but not deactivated themselves.",
+    "category": "step",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the default value and editable status of the 'Version' field when creating a GST Rate?",
+    "expected_source_contains": "sTMS_FS_(Stage_1)_AP",
+    "expected_pages": [52],
+    "ground_truth": "The 'Version' field for a GST Rate has no default value, is mandatory, uses a single line of text control type, and is not editable.",
+    "category": "step",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What decimal precision is required for the 'GST rate (%)' field?",
+    "expected_source_contains": "sTMS_FS_(Stage_1)_AP",
+    "expected_pages": [52],
+    "ground_truth": "The 'GST rate (%)' field is a mandatory Float number field that supports 2 decimal places, and it is editable.",
+    "category": "step",
+    "difficulty": "easy"
+  },
+  {
+    "question": "Is the 'Effective to' field mandatory when creating a GST Rate, and what does the listing page display if it's blank?",
+    "expected_source_contains": "sTMS_FS_(Stage_1)_AP",
+    "expected_pages": [51, 52],
+    "ground_truth": "No, 'Effective to' is not mandatory and is not editable on creation. If left blank, the GST Rate listing page will display an 'N/A' value for that record.",
+    "category": "step",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What control type is used for the 'WSP indicator' field in the Course Rate creation form, and what values does it support?",
+    "expected_source_contains": "sTMS_FS_(Stage_1)_AP",
+    "expected_pages": [117],
+    "ground_truth": "The 'WSP indicator' field uses a Radio button group control type allowing single selection, with values Yes, No, or N/A. It is mandatory and editable, and is used to generate the Course rate code as 'WSP' or 'NWSP'.",
+    "category": "step",
+    "difficulty": "medium"
+  },
+  {
+    "question": "Can the 'Rate type' or 'Rate' fields of a Course Rate be updated once the rate is linked to an active course or intake?",
+    "expected_source_contains": "sTMS_FS_(Stage_1)_AP",
+    "expected_pages": [118],
+    "ground_truth": "No. If a Course Rate is linked to active courses or intakes, the Rate type and Rate fields cannot be updated; users must instead create a new version, and linked active courses automatically use the new version with an email notification triggered to CET Admin or Course Manager.",
+    "category": "step",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What value list options are available for the 'Status' field in the Course Rate listing page, and what restriction applies?",
+    "expected_source_contains": "sTMS_FS_(Stage_1)_AP",
+    "expected_pages": [115],
+    "ground_truth": "The 'Status' column has a value list of Active and Inactive. Only Active records can be used when creating a Course or Course Intake, and new records are created with active status by default.",
+    "category": "step",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the editable rule for the 'Approved absence counted as' field in the Institution Level Attendance Rule Setup?",
+    "expected_source_contains": "Stage_3_FS",
+    "expected_pages": [63],
+    "ground_truth": "The 'Approved absence counted as' field is a mandatory Radio button with a default value of 'Present', and it is editable. Its value list options are Present and Absent.",
+    "category": "step",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the default value for the 'Calculation method' field in the attendance rule setup, and what are the two value options?",
+    "expected_source_contains": "Stage_3_FS",
+    "expected_pages": [63],
+    "ground_truth": "The 'Calculation method' field defaults to 'By present session number', with the two value list options being 'By present session number' and 'By present session hour'. It is a mandatory, editable Radio button field.",
+    "category": "step",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What is the maximum number of hours allowed if Working days is set to 'hours' for the Attendance Marking Deadline setting?",
+    "expected_source_contains": "Stage_3_FS",
+    "expected_pages": [64],
+    "ground_truth": "If hours is selected, the number of hours cannot exceed 24 hours, and must be an integer greater than 0.",
+    "category": "step",
+    "difficulty": "hard"
+  },
+  {
+    "question": "What is the table interpretation for the 'Number of working days' field in the Attendance Marking Deadline settings?",
+    "expected_source_contains": "Stage_3_FS",
+    "expected_pages": [64],
+    "ground_truth": "The 'Number of working days' field is a mandatory, editable single line of text field with a default value of 0, used to input how many working days (or hours) after the session end date/time the attendance marking deadline should be set; it must be an integer.",
+    "category": "step",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What is the validation rule and editable status for the 'Time entry code' field in the Time Entry Code master data setting?",
+    "expected_source_contains": "Stage_3_FS",
+    "expected_pages": [190],
+    "ground_truth": "The 'Time entry code' field is a mandatory single line of text field, editable, with no default value, and is searchable and displayed on the listing page.",
+    "category": "step",
+    "difficulty": "easy"
+  },
+  {
+    "question": "How many built-in Teaching types exist in the Time Entry Code master data setup, and can they be edited?",
+    "expected_source_contains": "Stage_3_FS",
+    "expected_pages": [189, 190],
+    "ground_truth": "There are 3 default built-in teaching types: 'Teaching', 'Marking', and 'Invigilating' (also referenced as 'Invigilator'). These built-in teaching types cannot be deleted or edited.",
+    "category": "step",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What happens to a Stackable Course's 'Set up stackable course' checkbox once the course is activated?",
+    "expected_source_contains": "STEP Stackable Course",
+    "expected_pages": [12],
+    "ground_truth": "Once the course is activated, the 'Set up stackable course' checkbox is greyed out and cannot be edited in the current course version, unless a new course version is created.",
+    "category": "step",
+    "difficulty": "medium"
+  },
+  {
+    "question": "What value list is used for the 'Stackable course' column on the Course Listing page, and what determines its value?",
+    "expected_source_contains": "STEP Stackable Course",
+    "expected_pages": [12],
+    "ground_truth": "The 'Stackable course' column has a value list of Yes and No. The value is 'Yes' if the 'Setup stackable course' checkbox is ticked for the course, and 'No' otherwise.",
+    "category": "step",
+    "difficulty": "easy"
+  },
+  {
+    "question": "What status is automatically assigned to a student in the stackable pool when the system detects their enrollment in a stackable course module?",
+    "expected_source_contains": "STEP Stackable Course",
+    "expected_pages": [18],
+    "ground_truth": "The student is automatically loaded into the stackable pool's 'Student enrolment list' with a 'Commenced' status, indicating they have started their academic progress in the stackable course.",
+    "category": "step",
+    "difficulty": "medium"
+  }
+]

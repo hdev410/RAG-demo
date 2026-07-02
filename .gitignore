@@ -13,11 +13,11 @@ env/
 .env
 
 # RAG generated files
-chroma_db/
-bm25_index.pkl
+artifacts/indexes/
+artifacts/reports/
 
-# Data files
-data/
+# Private/source data; keep the small ground-truth dataset versioned
+data/source_documents/
 
 # IDE
 .vscode/
